@@ -5,7 +5,7 @@
 #include <regex>
 #include <sys/types.h>
 #include <set>
-
+#include "interpolation.hpp"
 
 void search(std::string curr_directory, std::string extension, std::vector<std::string>& lidar_files){
     DIR* dir_point = opendir(curr_directory.c_str());
@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
     }
     std::string perception_path = argv[1];
     std::string egomotion_path = argv[2];
+    std::string outputPath = "/home/lizhi/HDmap/test_lidar_interpolation/";
 
 // 读取lidar 感知结果
     std::unordered_map<double, LidarPerception> perceptions;    
@@ -111,6 +112,8 @@ int main(int argc, char *argv[])
     data_to_be_processed.insert(*lidar_times.begin());
     std::vector<SensorType> sensortypes = {SensorType::FISH_EYE_F, SensorType::FISH_EYE_B, SensorType::FISH_EYE_L, SensorType::FISH_EYE_R};
 
+    Interpolation interpolation(outputPath);
+
     while(!lidar_times.empty())
     {
         for(int i = 0; i < sensortypes.size(); i++){
@@ -165,6 +168,9 @@ int main(int argc, char *argv[])
             }
         }
 
+        interpolation.interpolateCameras(data_to_be_processed, perceptions);
+        data_to_be_processed.erase(data_to_be_processed.begin(), data_to_be_processed.rbegin());
+        
         
 
 
