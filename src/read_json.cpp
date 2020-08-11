@@ -1,6 +1,6 @@
-#include "json.hpp"
-#include <string>
+#include "read_json.hpp"
 
+/**
 namespace tools {
 inline std::string ReadFileToString(const std::string &file_path) {
   std::ifstream fin(file_path);
@@ -39,7 +39,22 @@ struct LidarPerception {
     LidarPerception(nlohmann::json const &j){
         isKeyCube = j["children"]["data"]["isKeyCube"];
         isKeyPropertyCube = j["children"]["data"]["isKeyPropertyCube"];
-        type
+        type = j["children"]["data"]["type"];
+
+        height = j["children"]["height"];
+        width = j["children"]["width"];
+        length = j["children"]["length"];
+        pitch = j["children"]["pitch"];
+        roll = j["children"]["roll"];
+        yaw = j["children"]["yaw"];
+        x = j["children"]["x"];
+        y = j["children"]["y"];
+        z = j["children"]["z"];
+        score = j["children"]["score"];
+        tag = j["children"]["tag"];
+        uuid = j["children"]["uuid"];
+
+
 
 
 
@@ -55,4 +70,4 @@ struct LidarPerception {
         double score;
 
     }
-}
+};**/

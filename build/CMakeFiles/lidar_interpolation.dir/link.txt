@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++11 -O3 -DNDEBUG   CMakeFiles/lidar_interpolation.dir/src/main.cpp.o  -o lidar_interpolation libinterpolation.so -Wl,-rpath,/home/lizhi/HDmap/lidar_interpolation/build 
