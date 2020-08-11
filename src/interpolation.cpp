@@ -5,7 +5,7 @@
 void Interpolation::interpolateCameras(std::set<SensorTimes, LESS_T0>& data_to_be_processed, std::unordered_map<double, LidarPerception>& perceptions)
 {
     std::set<SensorTimes, LESS_T0>::iterator iter;
-    std::unordered_map<SensorType, 
+    std::unordered_map<double, SensorType> timestamp_sensortype; 
     for(iter = data_to_be_processed.begin(); iter != data_to_be_processed.end(); iter++){ // 按不同相机循环，每次处理一个时间对应的相机
         if(iter->type == SensorType::LIDAR) continue;
         else{
@@ -23,9 +23,10 @@ void Interpolation::interpolateCameras(std::set<SensorTimes, LESS_T0>& data_to_b
                     linearInterpolates(front_lidar, back_lidar, iter->type, iter->time, front_lidar_time, back_lidar_time);
                 }
             }
+            timestamp_sensortype[iter->time] = iter->type;
         }
     }
-    writeToJson();
+    writeToJson(timestamp_sensortype);
 }
 
 void Interpolation::linearInterpolates(Lidar& front_lidar, Lidar& back_lidar, SensorType sensortype, double camera_time, double &front_lidar_time, double &back_lidar_time){
@@ -58,14 +59,14 @@ void Interpolation::linearInterpolates(Lidar& front_lidar, Lidar& back_lidar, Se
     perception_at_camera_time.tag = front_lidar.tag;
     perception_at_camera_time.score = front_lidar.score;
 
-    camera_perception_result[sensortype].push_back(perception_at_camera_time);
+    camera_perception_result[camera_time].push_back(perception_at_camera_time);//这里有问题，应该是按时间搜索，不应该按type，因为一个type对应多个时间,但是也需要type
 }
 
-void Interpolation::writeToJson(){
-    std::unordered_map<SensorType, std::vector<Lidar>>::iterator iter;
-    for(iter = camera_perception_result.begin(); iter != camera_perception_result.end(); iter++){
+void Interpolation::writeToJson(std::unordered_map<double, SensorType>& timestamp_sensortype){
+    std::unordered_map<double, std::vector<Lidar>>::iterator iter;
+    for(iter = camera_perception_result.begin(); iter != camera_perception_result.end(); iter++){//按照lidar两帧之间所有相机时间戳进行循环
         nlohmann::json jsonfiles;
-        for(int i = 0; i < iter->second.size(); i++){
+        for(int i = 0; i < iter->second.size(); i++){//每个相机时间戳对应的感知结果，多个物体感知
             nlohmann::json json_file;
             json_file["data"] = {
                 {"isKeyCube", {"false"}}, 
@@ -89,11 +90,10 @@ void Interpolation::writeToJson(){
         jsonfiles["tag"] = "_";
         jsonfiles["version"] = "1.0";
 
-        std::string save_json_path = outputPath + camera_folders[iter->first] + std::to_string()
+        std::string save_json_path = outputPath + camera_folders[timestamp_sensortype[iter->first]] + std::to_string(iter->first) + ".pcd.tar.json";
 
-        std::ofstream save_json_to_file
-        
-        
+        std::ofstream save_json_to_file(save_json_path);
+        save_json_to_file << jsonfiles;
     }
     
 
