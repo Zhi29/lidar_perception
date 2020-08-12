@@ -12,6 +12,8 @@ void Interpolation::interpolateCameras(std::set<SensorTimes, LESS_T0>& data_to_b
             std::unordered_map<long int, Lidar>::iterator iter_lidar_front;
             double front_lidar_time = data_to_be_processed.begin()->time;
             double back_lidar_time = data_to_be_processed.rbegin()->time;
+            if(data_to_be_processed.begin()->type != SensorType::LIDAR) std::cout << "front not lidar" << std::endl;
+            if(data_to_be_processed.rbegin()->type != SensorType::LIDAR) std::cout << "back not lidar" << std::endl;
             for(iter_lidar_front = perceptions.at(front_lidar_time).perception_.begin();
                 iter_lidar_front != perceptions.at(front_lidar_time).perception_.end(); iter_lidar_front++)//一个感知文件内多个被感知到的物体，按trackid遍历
             {
