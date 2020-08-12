@@ -45,6 +45,8 @@ struct LidarPerception {
         : LidarPerception(tools::ReadFileToJson(perception_path)) {}
     LidarPerception(nlohmann::json const &j){
         nlohmann::json children = j["children"];
+        std::cout << "Is children empty? " << children.empty() << std::endl;
+        if(children.empty()){}
         std::cout << children[0]["data"]["isKeyCube"][0] << std::endl;
         
         for(int i = 0; i < children.size(); i++){
@@ -64,7 +66,7 @@ struct LidarPerception {
 
             //lidar.isKeyCube = children[i]["data"]["isKeyCube"][0];
             //lidar.isKeyPropertyCube = children[i]["data"]["isKeyPropertyCube"][0];
-            //lidar.type = children[i]["data"]["type"][0];
+            lidar.type = children[i]["data"]["type"][0];
 
             std::cout << lidar.type <<" "<< lidar.trackid<<std::endl;
 
