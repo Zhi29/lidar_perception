@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
         }
 
         interpolation.interpolateCameras(data_to_be_processed, perceptions);
-        data_to_be_processed.erase(data_to_be_processed.begin(), data_to_be_processed.rbegin());
+        data_to_be_processed.erase(data_to_be_processed.begin(), data_to_be_processed.end() - 1);
         data_to_be_processed.insert(lidar_times.begin());
         lidar_times.erase(lidar_times.begin());
         
