@@ -19,8 +19,10 @@ void search(std::string curr_directory, std::string extension, std::vector<std::
 		else if (entry->d_type == DT_REG){		// if entry is a regular file
 			std::string fname = entry->d_name;	// filename
 												// if filename's last characters are extension
-			if (fname.find(extension, (fname.length() - extension.length())) != std::string::npos)
-				lidar_files.push_back(fname);		// add filename to results vector
+            if(fname[0] != "."){
+                if (fname.find(extension, (fname.length() - extension.length())) != std::string::npos)
+                    lidar_files.push_back(fname);		// add filename to results vector
+            }
 		}
 		entry = readdir(dir_point);
 	}
