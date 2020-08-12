@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     std::unordered_map<double, LidarPerception> perceptions;    
     std::vector<std::string> lidar_files;
     std::set<SensorTimes, LESS_T0> lidar_times;
-    search(dir + "/msd_score_lidar_ap/", "new", lidar_files); // read all lidar json file name
+    search(project_path + dir + "/msd_score_lidar_ap/", "new", lidar_files); // read all lidar json file name
     for(int i = 0; i < lidar_files.size(); i++){
         std::cout << lidar_files[i] << std::endl;
     }
