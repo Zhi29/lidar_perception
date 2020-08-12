@@ -188,6 +188,7 @@ int main(int argc, char *argv[])
                                 data_to_be_processed.insert(*fish_eye_b_.begin());
                                 fish_eye_b_.erase(fish_eye_b_.begin());
                             }
+                            std::cout << "fish_eye_b_ " << fish_eye_b_.size() << std::endl;
                         }
                         break;
                     }
@@ -200,6 +201,7 @@ int main(int argc, char *argv[])
                                 data_to_be_processed.insert(*fish_eye_l_.begin());
                                 fish_eye_l_.erase(fish_eye_l_.begin());
                             }
+                            std::cout << "fish_eye_l_ " << fish_eye_l_.size() << std::endl;
                         }
                         break;
                     }
@@ -212,6 +214,7 @@ int main(int argc, char *argv[])
                                 data_to_be_processed.insert(*fish_eye_r_.begin());
                                 fish_eye_r_.erase(fish_eye_r_.begin());
                             }
+                            std::cout << "fish_eye_r_ " << fish_eye_r_.size() << std::endl;
                         }
                         break;
                     }
