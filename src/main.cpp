@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
                                 data_to_be_processed.insert(*fish_eye_f_.begin());
                                 fish_eye_f_.erase(fish_eye_f_.begin());
                             }
-                            //std::cout << "fish_eye_f_ " << fish_eye_f_.size() << std::endl;
+                            std::cout << "fish_eye_f_ " << fish_eye_f_.size() << std::endl;
                         }
                         break;
                     }
