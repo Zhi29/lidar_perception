@@ -165,8 +165,8 @@ int main(int argc, char *argv[])
                 switch(sensortypes[i])
                 {
                     case SensorType::FISH_EYE_F:{
-                        //std::cout << "fish time ; begin ; rbegin: " << std::fixed << fish_eye_f_.begin()->time 
-                        //<<  data_to_be_processed.begin()->time << data_to_be_processed.rbegin()->time << std::endl;
+                        std::cout << "fish time ; begin ; rbegin: " << std::fixed << fish_eye_f_.begin()->time 
+                        <<  data_to_be_processed.begin()->time << data_to_be_processed.rbegin()->time << std::endl;
                         while(fish_eye_f_.begin()->time < data_to_be_processed.rbegin()->time){
                             if(fish_eye_f_.begin()->time < data_to_be_processed.begin()->time){
                                 fish_eye_f_.erase(fish_eye_f_.begin());
