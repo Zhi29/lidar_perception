@@ -167,16 +167,17 @@ int main(int argc, char *argv[])
                 switch(sensortypes[i])
                 {
                     case SensorType::FISH_EYE_F:{
-                        std::cout << "fish time ; begin ; rbegin: " << std::fixed << fish_eye_f_.begin()->time 
-                        <<  data_to_be_processed.begin()->time << data_to_be_processed.rbegin()->time << std::endl;
+                        //std::cout << "fish time ; begin ; rbegin: " << std::fixed << fish_eye_f_.begin()->time 
+                        //<<  data_to_be_processed.begin()->time << data_to_be_processed.rbegin()->time << std::endl;
                         while(fish_eye_f_.begin()->time < data_to_be_processed.rbegin()->time){
                             if(fish_eye_f_.begin()->time < data_to_be_processed.begin()->time){
                                 fish_eye_f_.erase(fish_eye_f_.begin());
                             }
                             else{
                                 data_to_be_processed.insert(*fish_eye_f_.begin());
+                                fish_eye_f_.erase(fish_eye_f_.begin());
                             }
-                            std::cout << "fish_eye_f_ " << fish_eye_f_.size() << std::endl;
+                            //std::cout << "fish_eye_f_ " << fish_eye_f_.size() << std::endl;
                         }
                         break;
                     }
@@ -187,6 +188,7 @@ int main(int argc, char *argv[])
                             }
                             else{
                                 data_to_be_processed.insert(*fish_eye_b_.begin());
+                                fish_eye_b_.erase(fish_eye_b_.begin());
                             }
                         }
                         break;
@@ -198,6 +200,7 @@ int main(int argc, char *argv[])
                             }
                             else{
                                 data_to_be_processed.insert(*fish_eye_l_.begin());
+                                fish_eye_l_.erase(fish_eye_l_.begin());
                             }
                         }
                         break;
@@ -209,6 +212,7 @@ int main(int argc, char *argv[])
                             }
                             else{
                                 data_to_be_processed.insert(*fish_eye_r_.begin());
+                                fish_eye_r_.erase(fish_eye_r_.begin());
                             }
                         }
                         break;
