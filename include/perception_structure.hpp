@@ -7,7 +7,6 @@
 #include <Eigen/Eigen>
 
 enum class SensorType : int {
-    NONE = 0,
     FISH_EYE_F = 1,
     FISH_EYE_B = 2,
     FISH_EYE_L = 3,
