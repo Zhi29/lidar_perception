@@ -152,9 +152,7 @@ int main(int argc, char *argv[])
         lidar_times.erase(lidar_times.begin());
         std::cout << "lidar size after: " << lidar_times.size() << std::endl;
 
-        std::set<SensorTimes, LESS_T0>::iterator iter_data_tbp;
-        for(iter_data_tbp = data_to_be_processed.begin(); iter_data_tbp != data_to_be_processed.end(); iter_data_tbp++)
-            std::cout << std::fixed << iter_data_tbp->time << std::endl;
+        
         std::vector<SensorType> sensortypes = {SensorType::FISH_EYE_F, SensorType::FISH_EYE_B, 
                                                 SensorType::FISH_EYE_L, SensorType::FISH_EYE_R
                                                 };
@@ -222,6 +220,9 @@ int main(int argc, char *argv[])
                 }
             }
 
+            std::set<SensorTimes, LESS_T0>::iterator iter_data_tbp;
+            for(iter_data_tbp = data_to_be_processed.begin(); iter_data_tbp != data_to_be_processed.end(); iter_data_tbp++)
+                std::cout << std::fixed << iter_data_tbp->time << std::endl;
             interpolation.interpolateCameras(data_to_be_processed, perceptions);
             data_to_be_processed.erase(data_to_be_processed.begin(), --data_to_be_processed.end());
             //std::cout << "data tbp size: " << data_to_be_processed.size() << std::endl;
