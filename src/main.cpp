@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 
         std::set<SensorTimes, LESS_T0>::iterator iter_data_tbp;
         for(iter_data_tbp = data_to_be_processed.begin(); iter_data_tbp != data_to_be_processed.end(); iter_data_tbp++)
-            std::cout << std::fixed << iter->time << std::endl;
+            std::cout << std::fixed << iter_data_tbp->time << std::endl;
         std::vector<SensorType> sensortypes = {SensorType::FISH_EYE_F, SensorType::FISH_EYE_B, 
                                                 SensorType::FISH_EYE_L, SensorType::FISH_EYE_R
                                                 };
