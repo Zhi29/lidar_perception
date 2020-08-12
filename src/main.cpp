@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
                                                 SensorType::FISH_EYE_L, SensorType::FISH_EYE_R
                                                 };
 
-        std::cout << "sensortypes.size() " << sensortypes.size()  
+        std::cout << "sensortypes.size() " << sensortypes.size() << std::endl; 
 
         Interpolation interpolation(outputPath);
 
