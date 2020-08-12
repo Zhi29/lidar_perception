@@ -79,7 +79,7 @@ struct LidarPerception {
     double height, length, width;
     double pitch, roll, yaw;
     double x, y, z;
-    std::string tag；
+    std::string tag;
     long int uuid;
     double score;
 };
