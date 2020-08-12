@@ -68,152 +68,152 @@ int main(int argc, char *argv[])
     for(auto dir : project_dirs){
 
 
-// 读取lidar 感知结果
-    std::unordered_map<double, LidarPerception> perceptions;    
-    std::vector<std::string> lidar_files;
-    std::set<SensorTimes, LESS_T0> lidar_times;
-    search(project_path + dir + "/msd_score_lidar_ap/", "new", lidar_files); // read all lidar json file name
-    for(int i = 0; i < lidar_files.size(); i++){
-        std::cout << lidar_files[i] << std::endl;
-    }
-/**
-    for(int i = 0; i < lidar_files.size(); i++){
-        LidarPerception lidar_perception(perception_path + lidar_files[i]);
-        double lidar_timestamp = std::stod(lidar_files[i].substr(0, lidar_files[i].find(".")));
-        SensorTimes lidar_time(lidar_timestamp, SensorType::LIDAR);
-        lidar_times.insert(lidar_time);
-        //lidar_files[i] = lidar_files[i].substr(0, lidar_files[i].find("."));
-        //std::cout << std::fixed << lidar_timestamp << std::endl;
-        perceptions.insert({lidar_timestamp, lidar_perception});
-        //std::cout << lidar_files[i] << std::endl;
-    }
+    // 读取lidar 感知结果
+        std::unordered_map<double, LidarPerception> perceptions;    
+        std::vector<std::string> lidar_files;
+        std::set<SensorTimes, LESS_T0> lidar_times;
+        search(project_path + dir + "/msd_score_lidar_ap/", "new", lidar_files); // read all lidar json file name
+        //for(int i = 0; i < lidar_files.size(); i++){
+        //    std::cout << lidar_files[i] << std::endl;
+        //}
 
-//读取ego motion 结果
-    std::vector<std::string> egomotion_files;
-    std::unordered_map<double, EgoMotionReader> egoMotions;
-    search(dir + "/navi_fusion/", "json", egomotion_files);
-    for(int i = 0; i < egomotion_files.size(); i++){
-        EgoMotionReader ego_reader(egomotion_path + egomotion_files[i]);
-        egoMotions.insert({ego_reader.timestamp, ego_reader});
-        std::cout << ego_reader.timestamp << std::endl;
-        std::cout << egomotion_files[i] << std::endl;
-    }
-
-//读取FISH_EYE_F的时间戳
-    std::vector<std::string> fish_eye_f_files;
-    std::set<SensorTimes, LESS_T0> fish_eye_f_;
-    search(argv[3], "jpg", fish_eye_f_files);
-    for(int i = 0; i < fish_eye_f_files.size(); i++){
-        SensorTimes fish_eye_f(stod(fish_eye_f_files[i].substr(0, fish_eye_f_files[i].find("."))), SensorType::FISH_EYE_F);
-        fish_eye_f_.insert(fish_eye_f);
-    }
-    fish_eye_f_files.clear();
-
-    //std::set<SensorTimes, LESS_T0>::iterator iter;
-    //for(iter = fish_eye_f_.begin(); iter != fish_eye_f_.end(); iter++) std::cout << iter->time << std::endl;
-
-//读取FISH_EYE_B的时间戳
-    std::vector<std::string> fish_eye_b_files;
-    std::set<SensorTimes, LESS_T0> fish_eye_b_;
-    search(argv[4], "jpg", fish_eye_b_files);
-    for(int i = 0; i < fish_eye_b_files.size(); i++){
-        SensorTimes fish_eye_b(stod(fish_eye_b_files[i].substr(0, fish_eye_b_files[i].find("."))), SensorType::FISH_EYE_B);
-        fish_eye_b_.insert(fish_eye_b);
-    }
-    fish_eye_b_files.clear();
-
-//读取FISH_EYE_L的时间戳
-    std::vector<std::string> fish_eye_l_files;
-    std::set<SensorTimes, LESS_T0> fish_eye_l_;
-    search(argv[4], "jpg", fish_eye_l_files);
-    for(int i = 0; i < fish_eye_l_files.size(); i++){
-        SensorTimes fish_eye_l(stod(fish_eye_l_files[i].substr(0, fish_eye_l_files[i].find("."))), SensorType::FISH_EYE_L);
-        fish_eye_l_.insert(fish_eye_l);
-    }
-    fish_eye_l_files.clear();
-
-//读取FISH_EYE_R的时间戳
-    std::vector<std::string> fish_eye_r_files;
-    std::set<SensorTimes, LESS_T0> fish_eye_r_;
-    search(argv[4], "jpg", fish_eye_r_files);
-    for(int i = 0; i < fish_eye_r_files.size(); i++){
-        SensorTimes fish_eye_r(stod(fish_eye_r_files[i].substr(0, fish_eye_r_files[i].find("."))), SensorType::FISH_EYE_R);
-        fish_eye_r_.insert(fish_eye_r);
-    }
-    fish_eye_r_files.clear();
-
-    std::set<SensorTimes, LESS_T0> data_to_be_processed;
-    data_to_be_processed.insert(*lidar_times.begin());
-    lidar_times.erase(lidar_times.begin());
-    data_to_be_processed.insert(*lidar_times.begin());
-    lidar_times.erase(lidar_times.begin());
-    std::vector<SensorType> sensortypes = {SensorType::FISH_EYE_F, SensorType::FISH_EYE_B, 
-                                            SensorType::FISH_EYE_L, SensorType::FISH_EYE_R
-                                            };
-
-    Interpolation interpolation(outputPath);
-
-    while(!lidar_times.empty())
-    {
-        for(int i = 0; i < sensortypes.size(); i++){
-            switch(sensortypes[i])
-            {
-                case SensorType::FISH_EYE_F:{
-                    while(fish_eye_f_.begin()->time < data_to_be_processed.rbegin()->time){
-                        if(fish_eye_f_.begin()->time < data_to_be_processed.begin()->time){
-                            fish_eye_f_.erase(fish_eye_f_.begin());
-                        }
-                        else{
-                            data_to_be_processed.insert(*fish_eye_f_.begin());
-                        }
-                    }
-                    break;
-                }
-                case SensorType::FISH_EYE_B:{
-                    while(fish_eye_b_.begin()->time < data_to_be_processed.rbegin()->time){
-                        if(fish_eye_b_.begin()->time < data_to_be_processed.begin()->time){
-                            fish_eye_b_.erase(fish_eye_b_.begin());
-                        }
-                        else{
-                            data_to_be_processed.insert(*fish_eye_b_.begin());
-                        }
-                    }
-                    break;
-                }
-                case SensorType::FISH_EYE_L:{
-                    while(fish_eye_l_.begin()->time < data_to_be_processed.rbegin()->time){
-                        if(fish_eye_l_.begin()->time < data_to_be_processed.begin()->time){
-                            fish_eye_l_.erase(fish_eye_l_.begin());
-                        }
-                        else{
-                            data_to_be_processed.insert(*fish_eye_l_.begin());
-                        }
-                    }
-                    break;
-                }
-                case SensorType::FISH_EYE_R:{
-                    while(fish_eye_r_.begin()->time < data_to_be_processed.rbegin()->time){
-                        if(fish_eye_r_.begin()->time < data_to_be_processed.begin()->time){
-                            fish_eye_r_.erase(fish_eye_r_.begin());
-                        }
-                        else{
-                            data_to_be_processed.insert(*fish_eye_r_.begin());
-                        }
-                    }
-                    break;
-                }
-                default: 
-                    break;
-            }
+        for(int i = 0; i < lidar_files.size(); i++){
+            LidarPerception lidar_perception(perception_path + lidar_files[i]);
+            double lidar_timestamp = std::stod(lidar_files[i].substr(0, lidar_files[i].find(".")));
+            SensorTimes lidar_time(lidar_timestamp, SensorType::LIDAR);
+            lidar_times.insert(lidar_time);
+            //lidar_files[i] = lidar_files[i].substr(0, lidar_files[i].find("."));
+            //std::cout << std::fixed << lidar_timestamp << std::endl;
+            perceptions.insert({lidar_timestamp, lidar_perception});
+            //std::cout << lidar_files[i] << std::endl;
         }
 
-        interpolation.interpolateCameras(data_to_be_processed, perceptions);
-        data_to_be_processed.erase(data_to_be_processed.begin(), --data_to_be_processed.end());
+    //读取ego motion 结果
+        std::vector<std::string> egomotion_files;
+        std::unordered_map<double, EgoMotionReader> egoMotions;
+        search(project_path + dir + "/navi_fusion/", "json", egomotion_files);
+        for(int i = 0; i < egomotion_files.size(); i++){
+            EgoMotionReader ego_reader(egomotion_path + egomotion_files[i]);
+            egoMotions.insert({ego_reader.timestamp, ego_reader});
+            std::cout << ego_reader.timestamp << std::endl;
+            std::cout << egomotion_files[i] << std::endl;
+        }
+
+    //读取FISH_EYE_F的时间戳
+        std::vector<std::string> fish_eye_f_files;
+        std::set<SensorTimes, LESS_T0> fish_eye_f_;
+        search(project_path + dir + "/fisheye_F/", "jpg", fish_eye_f_files);
+        for(int i = 0; i < fish_eye_f_files.size(); i++){
+            SensorTimes fish_eye_f(stod(fish_eye_f_files[i].substr(0, fish_eye_f_files[i].find("."))), SensorType::FISH_EYE_F);
+            fish_eye_f_.insert(fish_eye_f);
+        }
+        fish_eye_f_files.clear();
+
+        //std::set<SensorTimes, LESS_T0>::iterator iter;
+        //for(iter = fish_eye_f_.begin(); iter != fish_eye_f_.end(); iter++) std::cout << iter->time << std::endl;
+
+    //读取FISH_EYE_B的时间戳
+        std::vector<std::string> fish_eye_b_files;
+        std::set<SensorTimes, LESS_T0> fish_eye_b_;
+        search(project_path + dir + "/fisheye_B/", "jpg", fish_eye_b_files);
+        for(int i = 0; i < fish_eye_b_files.size(); i++){
+            SensorTimes fish_eye_b(stod(fish_eye_b_files[i].substr(0, fish_eye_b_files[i].find("."))), SensorType::FISH_EYE_B);
+            fish_eye_b_.insert(fish_eye_b);
+        }
+        fish_eye_b_files.clear();
+
+    //读取FISH_EYE_L的时间戳
+        std::vector<std::string> fish_eye_l_files;
+        std::set<SensorTimes, LESS_T0> fish_eye_l_;
+        search(project_path + dir + "/fisheye_L/", "jpg", fish_eye_l_files);
+        for(int i = 0; i < fish_eye_l_files.size(); i++){
+            SensorTimes fish_eye_l(stod(fish_eye_l_files[i].substr(0, fish_eye_l_files[i].find("."))), SensorType::FISH_EYE_L);
+            fish_eye_l_.insert(fish_eye_l);
+        }
+        fish_eye_l_files.clear();
+
+    //读取FISH_EYE_R的时间戳
+        std::vector<std::string> fish_eye_r_files;
+        std::set<SensorTimes, LESS_T0> fish_eye_r_;
+        search(project_path + dir + "/fisheye_R/", "jpg", fish_eye_r_files);
+        for(int i = 0; i < fish_eye_r_files.size(); i++){
+            SensorTimes fish_eye_r(stod(fish_eye_r_files[i].substr(0, fish_eye_r_files[i].find("."))), SensorType::FISH_EYE_R);
+            fish_eye_r_.insert(fish_eye_r);
+        }
+        fish_eye_r_files.clear();
+
+        std::set<SensorTimes, LESS_T0> data_to_be_processed;
         data_to_be_processed.insert(*lidar_times.begin());
         lidar_times.erase(lidar_times.begin());
-        
-    }
-**/
+        data_to_be_processed.insert(*lidar_times.begin());
+        lidar_times.erase(lidar_times.begin());
+        std::vector<SensorType> sensortypes = {SensorType::FISH_EYE_F, SensorType::FISH_EYE_B, 
+                                                SensorType::FISH_EYE_L, SensorType::FISH_EYE_R
+                                                };
+
+        Interpolation interpolation(outputPath);
+
+        while(!lidar_times.empty())
+        {
+            for(int i = 0; i < sensortypes.size(); i++){
+                switch(sensortypes[i])
+                {
+                    case SensorType::FISH_EYE_F:{
+                        while(fish_eye_f_.begin()->time < data_to_be_processed.rbegin()->time){
+                            if(fish_eye_f_.begin()->time < data_to_be_processed.begin()->time){
+                                fish_eye_f_.erase(fish_eye_f_.begin());
+                            }
+                            else{
+                                data_to_be_processed.insert(*fish_eye_f_.begin());
+                            }
+                        }
+                        break;
+                    }
+                    case SensorType::FISH_EYE_B:{
+                        while(fish_eye_b_.begin()->time < data_to_be_processed.rbegin()->time){
+                            if(fish_eye_b_.begin()->time < data_to_be_processed.begin()->time){
+                                fish_eye_b_.erase(fish_eye_b_.begin());
+                            }
+                            else{
+                                data_to_be_processed.insert(*fish_eye_b_.begin());
+                            }
+                        }
+                        break;
+                    }
+                    case SensorType::FISH_EYE_L:{
+                        while(fish_eye_l_.begin()->time < data_to_be_processed.rbegin()->time){
+                            if(fish_eye_l_.begin()->time < data_to_be_processed.begin()->time){
+                                fish_eye_l_.erase(fish_eye_l_.begin());
+                            }
+                            else{
+                                data_to_be_processed.insert(*fish_eye_l_.begin());
+                            }
+                        }
+                        break;
+                    }
+                    case SensorType::FISH_EYE_R:{
+                        while(fish_eye_r_.begin()->time < data_to_be_processed.rbegin()->time){
+                            if(fish_eye_r_.begin()->time < data_to_be_processed.begin()->time){
+                                fish_eye_r_.erase(fish_eye_r_.begin());
+                            }
+                            else{
+                                data_to_be_processed.insert(*fish_eye_r_.begin());
+                            }
+                        }
+                        break;
+                    }
+                    default: 
+                        break;
+                }
+            }
+
+            interpolation.interpolateCameras(data_to_be_processed, perceptions);
+            data_to_be_processed.erase(data_to_be_processed.begin(), --data_to_be_processed.end());
+            data_to_be_processed.insert(*lidar_times.begin());
+            lidar_times.erase(lidar_times.begin());
+            
+        }
+
     }//外层文件的循环结束
 
 }
