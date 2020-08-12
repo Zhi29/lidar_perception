@@ -94,7 +94,7 @@ void Interpolation::writeToJson(std::unordered_map<double, SensorType>& timestam
         
 
         std::string save_json_path = outputPath + camera_folders[timestamp_sensortype[iter->first]] + std::to_string(iter->first) + ".pcd.tar.json";
-        std::cout << save_json_path << std::endl;
+        //std::cout << save_json_path << std::endl;
         std::ofstream save_json_to_file(save_json_path);
         save_json_to_file << jsonfiles;
     }
