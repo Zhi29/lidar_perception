@@ -46,7 +46,7 @@ void search_directories(std::string curr_directory, std::string extension, std::
 
 int main(int argc, char *argv[])
 {
-    if(argc < 7){
+    if(argc < 2){
         std::cout << "Not enough argument" << std::endl;
         return 0;
     }
