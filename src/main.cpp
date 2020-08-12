@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
                     case SensorType::FISH_EYE_B:{
                         std::cout << "fish time ; begin ; rbegin: " << std::fixed << fish_eye_b_.begin()->time 
                         <<  data_to_be_processed.begin()->time << data_to_be_processed.rbegin()->time << std::endl;
-                        while(fish_eye_b_.begin()->time < data_to_be_processed.rbegin()->time){
+                        while(!fish_eye_b_.empty() && fish_eye_b_.begin()->time < data_to_be_processed.rbegin()->time){
                             if(fish_eye_b_.begin()->time < data_to_be_processed.begin()->time){
                                 fish_eye_b_.erase(fish_eye_b_.begin());
                             }
@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
                         break;
                     }
                     case SensorType::FISH_EYE_L:{
-                        while(fish_eye_l_.begin()->time < data_to_be_processed.rbegin()->time){
+                        while(!fish_eye_l_.empty() && fish_eye_l_.begin()->time < data_to_be_processed.rbegin()->time){
                             if(fish_eye_l_.begin()->time < data_to_be_processed.begin()->time){
                                 fish_eye_l_.erase(fish_eye_l_.begin());
                             }
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
                         break;
                     }
                     case SensorType::FISH_EYE_R:{
-                        while(fish_eye_r_.begin()->time < data_to_be_processed.rbegin()->time){
+                        while(!fish_eye_r_.empty() && fish_eye_r_.begin()->time < data_to_be_processed.rbegin()->time){
                             if(fish_eye_r_.begin()->time < data_to_be_processed.begin()->time){
                                 fish_eye_r_.erase(fish_eye_r_.begin());
                             }
