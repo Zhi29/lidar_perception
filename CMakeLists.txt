@@ -27,3 +27,6 @@ target_link_libraries(lidar_interpolation
                         interpolation
                         )
 
+add_executable(data_evaluation ${PROJECT_SOURCE_DIR}/src/data_evaluation.cpp)
+target_link_libraries(data_evaluation interpolation)
+
