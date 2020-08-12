@@ -1,7 +1,6 @@
 #ifndef PERCEPTION_STRUCTURE_HPP_
 #define PERCEPTION_STRUCTURE_HPP_
 
-
 #include <string>
 #include <Eigen/Core>
 #include <Eigen/Dense>

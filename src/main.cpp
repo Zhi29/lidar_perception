@@ -110,7 +110,12 @@ int main(int argc, char *argv[])
 
     std::set<SensorTimes, LESS_T0> data_to_be_processed;
     data_to_be_processed.insert(*lidar_times.begin());
-    std::vector<SensorType> sensortypes = {SensorType::FISH_EYE_F, SensorType::FISH_EYE_B, SensorType::FISH_EYE_L, SensorType::FISH_EYE_R};
+    lidar_times.erase(lidar_times.begin());
+    data_to_be_processed.insert(*lidar_times.begin());
+    lidar_times.erase(lidar_times.begin());
+    std::vector<SensorType> sensortypes = {SensorType::FISH_EYE_F, SensorType::FISH_EYE_B, 
+                                            SensorType::FISH_EYE_L, SensorType::FISH_EYE_R
+                                            };
 
     Interpolation interpolation(outputPath);
 
@@ -170,12 +175,9 @@ int main(int argc, char *argv[])
 
         interpolation.interpolateCameras(data_to_be_processed, perceptions);
         data_to_be_processed.erase(data_to_be_processed.begin(), data_to_be_processed.rbegin());
+        data_to_be_processed.insert(lidar_times.begin());
+        lidar_times.erase(lidar_times.begin());
         
-        
-
-
-
-
     }
 
 

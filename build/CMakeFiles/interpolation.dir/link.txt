@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC  -std=c++11 -O3 -DNDEBUG  -shared -Wl,-soname,libinterpolation.so -o libinterpolation.so CMakeFiles/interpolation.dir/src/read_json.cpp.o CMakeFiles/interpolation.dir/src/interpolation.cpp.o 
