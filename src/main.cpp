@@ -176,10 +176,13 @@ int main(int argc, char *argv[])
                                 fish_eye_f_.erase(fish_eye_f_.begin());
                             }
                             std::cout << "fish_eye_f_ " << fish_eye_f_.size() << std::endl;
+                            std::cout << data_to_be_processed.size() << std::endl;
                         }
                         break;
                     }
                     case SensorType::FISH_EYE_B:{
+                        std::cout << "fish time ; begin ; rbegin: " << std::fixed << fish_eye_b_.begin()->time 
+                        <<  data_to_be_processed.begin()->time << data_to_be_processed.rbegin()->time << std::endl;
                         while(fish_eye_b_.begin()->time < data_to_be_processed.rbegin()->time){
                             if(fish_eye_b_.begin()->time < data_to_be_processed.begin()->time){
                                 fish_eye_b_.erase(fish_eye_b_.begin());
@@ -189,6 +192,7 @@ int main(int argc, char *argv[])
                                 fish_eye_b_.erase(fish_eye_b_.begin());
                             }
                             std::cout << "fish_eye_b_ " << fish_eye_b_.size() << std::endl;
+                            std::cout << data_to_be_processed.size() << std::endl;
                         }
                         break;
                     }
