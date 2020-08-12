@@ -176,6 +176,7 @@ int main(int argc, char *argv[])
                             else{
                                 data_to_be_processed.insert(*fish_eye_f_.begin());
                             }
+                            std::cout << "fish_eye_f_ " << fish_eye_f_.size() << std::endl;
                         }
                         break;
                     }
