@@ -157,6 +157,8 @@ int main(int argc, char *argv[])
                                                 SensorType::FISH_EYE_L, SensorType::FISH_EYE_R
                                                 };
 
+        std::cout << "sensortypes.size() " << sensortypes.size()  
+
         Interpolation interpolation(outputPath);
 
         while(!lidar_times.empty())
@@ -178,6 +180,7 @@ int main(int argc, char *argv[])
                             std::cout << "fish_eye_f_ " << fish_eye_f_.size() << std::endl;
                             std::cout << data_to_be_processed.size() << std::endl;
                         }
+                        std::cout << "after fish eye f case\n";
                         break;
                     }
                     case SensorType::FISH_EYE_B:{
