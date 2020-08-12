@@ -23,6 +23,7 @@ void Interpolation::interpolateCameras(std::set<SensorTimes, LESS_T0>& data_to_b
                     linearInterpolates(front_lidar, back_lidar, iter->type, iter->time, front_lidar_time, back_lidar_time);
                 }
             }
+            std::cout << iter->type << std::endl;
             timestamp_sensortype[iter->time] = iter->type;
         }
     }
