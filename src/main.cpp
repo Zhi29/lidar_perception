@@ -27,7 +27,7 @@ void search(std::string curr_directory, std::string extension, std::vector<std::
 	return;
 }
 
-void search_directories(std::string curr_directory, std::string extension, std::vector<std::string>& sub_directories){
+void search_directories(std::string curr_directory, std::vector<std::string>& sub_directories){
     DIR* dir_point = opendir(curr_directory.c_str());
 	dirent* entry = readdir(dir_point);
 	while (entry){									// if !entry then end of directory
@@ -58,18 +58,23 @@ int main(int argc, char *argv[])
 
 //获得所有数据包的文件夹名称
     std::vector<std::string> project_dirs;
-    search_directories(project_path, "PLN2N0X5", project_dirs);
-    for(int i = 0; i < project_dirs.size(); i++){
-        std::cout << project_dirs[i] << std::endl;
-    }
+    search_directories(project_path, project_dirs);
+    //for(int i = 0; i < project_dirs.size(); i++){
+    //    std::cout << project_dirs[i] << std::endl;
+    //}
 
-/**
+    for(auto dir : project_dirs){
+
+
 // 读取lidar 感知结果
     std::unordered_map<double, LidarPerception> perceptions;    
     std::vector<std::string> lidar_files;
     std::set<SensorTimes, LESS_T0> lidar_times;
-    search(argv[1], "json", lidar_files); // read all lidar json file name
-
+    search(dir + "/msd_score_lidar_ap/", "new", lidar_files); // read all lidar json file name
+    for(int i = 0; i < lidar_files.size(); i++){
+        std::cout << lidar_files[i] << std::endl;
+    }
+/**
     for(int i = 0; i < lidar_files.size(); i++){
         LidarPerception lidar_perception(perception_path + lidar_files[i]);
         double lidar_timestamp = std::stod(lidar_files[i].substr(0, lidar_files[i].find(".")));
@@ -84,7 +89,7 @@ int main(int argc, char *argv[])
 //读取ego motion 结果
     std::vector<std::string> egomotion_files;
     std::unordered_map<double, EgoMotionReader> egoMotions;
-    search(argv[2], "json", egomotion_files);
+    search(dir + "/navi_fusion/", "json", egomotion_files);
     for(int i = 0; i < egomotion_files.size(); i++){
         EgoMotionReader ego_reader(egomotion_path + egomotion_files[i]);
         egoMotions.insert({ego_reader.timestamp, ego_reader});
@@ -207,6 +212,7 @@ int main(int argc, char *argv[])
         
     }
 **/
+    }//外层文件的循环结束
 
 }
 
