@@ -27,16 +27,42 @@ void search(std::string curr_directory, std::string extension, std::vector<std::
 	return;
 }
 
+void search_directories(std::string curr_directory, std::string extension, std::vector<std::string>& sub_directories){
+    DIR* dir_point = opendir(curr_directory.c_str());
+	dirent* entry = readdir(dir_point);
+	while (entry){									// if !entry then end of directory
+		if (entry->d_type == DT_DIR){				// if entry is a directory
+			std::string fname = entry->d_name;
+			if (fname != "." && fname != "..")
+			{
+                if(fname.find(extension, (fname.length() - extension.length())) != std::string::npos)
+                    directories.push_back(fname);
+            }
+		}
+		entry = readdir(dir_point);
+	}
+	return;
+}
+
 int main(int argc, char *argv[])
 {
     if(argc < 7){
         std::cout << "Not enough argument" << std::endl;
         return 0;
     }
-    std::string perception_path = argv[1];
-    std::string egomotion_path = argv[2];
+    //std::string perception_path = argv[1];
+    //std::string egomotion_path = argv[2];
+    std::string project_path = argv[1];
     std::string outputPath = "/home/lizhi/HDmap/test_lidar_interpolation/";
 
+//获得所有数据包的文件夹名称
+    std::vector<std::string> project_dirs;
+    search_directories(project_path, "PLN2N0X5", project_dirs);
+    for(int i = 0; i < project_dirs.size(); i++){
+        std::cout << project_dirs[i] << std::endl;
+    }
+
+/**
 // 读取lidar 感知结果
     std::unordered_map<double, LidarPerception> perceptions;    
     std::vector<std::string> lidar_files;
@@ -179,7 +205,7 @@ int main(int argc, char *argv[])
         lidar_times.erase(lidar_times.begin());
         
     }
-
+**/
 
 }
 
