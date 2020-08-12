@@ -97,7 +97,7 @@ void Interpolation::writeToJson(std::unordered_map<double, SensorType>& timestam
         //std::cout << save_json_path << std::endl;
         std::ofstream save_json_to_file(save_json_path);
         jsonfiles.dump(4);
-        save_json_to_file << jsonfiles;
+        save_json_to_file <<std::setw(4)<< jsonfiles;
         //save_json_to_file.write(jsonfiles, save_json_to_file, pretty_print);
     }
     
