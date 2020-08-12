@@ -111,8 +111,8 @@ int main(int argc, char *argv[])
         }
         fish_eye_f_files.clear();
 
-        std::set<SensorTimes, LESS_T0>::iterator iter;
-        for(iter = fish_eye_f_.begin(); iter != fish_eye_f_.end(); iter++) std::cout << iter->time << std::endl;
+        //std::set<SensorTimes, LESS_T0>::iterator iter;
+        //for(iter = fish_eye_f_.begin(); iter != fish_eye_f_.end(); iter++) std::cout << iter->time << std::endl;
 
     //读取FISH_EYE_B的时间戳
         std::vector<std::string> fish_eye_b_files;
@@ -146,9 +146,15 @@ int main(int argc, char *argv[])
 
         std::set<SensorTimes, LESS_T0> data_to_be_processed;
         data_to_be_processed.insert(*lidar_times.begin());
+        std::cout << "lidar size before: " << lidar_times.size() << std::endl;
         lidar_times.erase(lidar_times.begin());
         data_to_be_processed.insert(*lidar_times.begin());
         lidar_times.erase(lidar_times.begin());
+        std::cout << "lidar size after: " << lidar_times.size() << std::endl;
+
+        std::set<SensorTimes, LESS_T0>::iterator iter_data_tbp;
+        for(iter_data_tbp = data_to_be_processed.begin(); iter_data_tbp != data_to_be_processed.end(); iter_data_tbp++)
+            std::cout << std::fixed << iter->time << std::endl;
         std::vector<SensorType> sensortypes = {SensorType::FISH_EYE_F, SensorType::FISH_EYE_B, 
                                                 SensorType::FISH_EYE_L, SensorType::FISH_EYE_R
                                                 };
@@ -161,6 +167,8 @@ int main(int argc, char *argv[])
                 switch(sensortypes[i])
                 {
                     case SensorType::FISH_EYE_F:{
+                        std::cout << "fish time ; begin ; rbegin: " << std::fixed << fish_eye_f_.begin()->time 
+                        <<  data_to_be_processed.begin()->time << data_to_be_processed.rbegin()->time << std::endl;
                         while(fish_eye_f_.begin()->time < data_to_be_processed.rbegin()->time){
                             if(fish_eye_f_.begin()->time < data_to_be_processed.begin()->time){
                                 fish_eye_f_.erase(fish_eye_f_.begin());
