@@ -20,7 +20,7 @@ struct Lidar{
     double roll, pitch, yaw;
     double x, y, z;
     double score;
-    std::string trackid;
+    long int trackid;
     std::string tag;
     bool isKeyCube;
     bool isKeyPropertyCube;

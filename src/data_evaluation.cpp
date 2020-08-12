@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
 // 读取lidar 感知结果
     //std::vector<LidarPerception> perceptions; 
-    std::unordered_map<std::string, std::vector<Lidar>> perceptions_by_ids;
+    std::unordered_map<long int, std::vector<Lidar>> perceptions_by_ids;
  
     std::vector<std::string> lidar_files;
     std::set<SensorTimes, LESS_T0> lidar_times;
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
         LidarPerception lidar_perception(perception_path + lidar_files[i]);
         double lidar_timestamp = std::stod(lidar_files[i].substr(0, lidar_files[i].find(".")));
         //perceptions.push_back(lidar_perception);
-        std::unordered_map<std::string, Lidar>::iterator iter;
+        std::unordered_map<long int, Lidar>::iterator iter;
         for(iter = lidar_perception.perception_.begin(); iter != lidar_perception.perception_.end(); iter++){
             perceptions_by_ids[iter->first].push_back(iter->second);
         }

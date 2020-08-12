@@ -72,14 +72,15 @@ struct LidarPerception {
         }
         
     }
-    std::unordered_map<std::string, Lidar> perception_;
+    std::unordered_map<long int, Lidar> perception_;
     bool isKeyCube;
     bool isKeyPropertyCube;
     std::string type;
     double height, length, width;
     double pitch, roll, yaw;
     double x, y, z;
-    std::string tag, uuid;
+    std::string tag；
+    long int uuid;
     double score;
 };
 

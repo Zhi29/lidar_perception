@@ -9,7 +9,7 @@ void Interpolation::interpolateCameras(std::set<SensorTimes, LESS_T0>& data_to_b
     for(iter = data_to_be_processed.begin(); iter != data_to_be_processed.end(); iter++){ // 按不同相机循环，每次处理一个时间对应的相机
         if(iter->type == SensorType::LIDAR) continue;
         else{
-            std::unordered_map<std::string, Lidar>::iterator iter_lidar_front;
+            std::unordered_map<long int, Lidar>::iterator iter_lidar_front;
             double front_lidar_time = data_to_be_processed.begin()->time;
             double back_lidar_time = data_to_be_processed.rbegin()->time;
             for(iter_lidar_front = perceptions.at(front_lidar_time).perception_.begin();
@@ -69,8 +69,8 @@ void Interpolation::writeToJson(std::unordered_map<double, SensorType>& timestam
         for(int i = 0; i < iter->second.size(); i++){//每个相机时间戳对应的感知结果，多个物体感知
             nlohmann::json json_file;
             json_file["data"] = {
-                {"isKeyCube", {"false"}}, 
-                {"isKeyPropertyCube", {"false"}}, 
+                {"isKeyCube", {false}}, 
+                {"isKeyPropertyCube", {false}}, 
                 {"type", {iter->second[i].type}}};
             json_file["height"] = iter->second[i].height;
             json_file["length"] = iter->second[i].length;
