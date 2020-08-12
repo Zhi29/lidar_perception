@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
         //}
 
         for(int i = 0; i < lidar_files.size(); i++){
-            LidarPerception lidar_perception(perception_path + lidar_files[i]);
+            LidarPerception lidar_perception(project_path + dir + "/msd_score_lidar_ap/" + lidar_files[i]);
             double lidar_timestamp = std::stod(lidar_files[i].substr(0, lidar_files[i].find(".")));
             SensorTimes lidar_time(lidar_timestamp, SensorType::LIDAR);
             lidar_times.insert(lidar_time);
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
         std::unordered_map<double, EgoMotionReader> egoMotions;
         search(project_path + dir + "/navi_fusion/", "json", egomotion_files);
         for(int i = 0; i < egomotion_files.size(); i++){
-            EgoMotionReader ego_reader(egomotion_path + egomotion_files[i]);
+            EgoMotionReader ego_reader(project_path + dir + "/navi_fusion/" + egomotion_files[i]);
             egoMotions.insert({ego_reader.timestamp, ego_reader});
             std::cout << ego_reader.timestamp << std::endl;
             std::cout << egomotion_files[i] << std::endl;
