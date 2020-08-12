@@ -45,33 +45,55 @@ struct LidarPerception {
         : LidarPerception(tools::ReadFileToJson(perception_path)) {}
     LidarPerception(nlohmann::json const &j){
         nlohmann::json children = j["children"];
-        std::cout << "Is children empty? " << children.empty() << std::endl;
-        if(children.empty()){}
-        std::cout << children[0]["data"]["isKeyCube"][0] << std::endl;
-        
-        for(int i = 0; i < children.size(); i++){
+        //std::cout << "Is children empty? " << children.empty() << std::endl;
+        if(children.empty()){
             Lidar lidar;
-            lidar.height = children[i]["height"];
-            lidar.width = children[i]["width"];
-            lidar.length = children[i]["length"];
-            lidar.x = children[i]["x"];
-            lidar.y = children[i]["y"];
-            lidar.z = children[i]["z"];
-            lidar.pitch = children[i]["pitch"];
-            lidar.roll = children[i]["roll"];
-            lidar.yaw = children[i]["yaw"];
-            lidar.tag = children[i]["tag"];
-            lidar.trackid = children[i]["uuid"];
-            lidar.score = children[i]["score"];
+            lidar.height = -1;
+            lidar.width = -1;
+            lidar.length = -1;
+            lidar.x = -1;
+            lidar.y = -1;
+            lidar.z = -1;
+            lidar.pitch = -1;
+            lidar.roll = -1;
+            lidar.yaw = -1;            
+            lidar.trackid = -1;
 
             //lidar.isKeyCube = children[i]["data"]["isKeyCube"][0];
             //lidar.isKeyPropertyCube = children[i]["data"]["isKeyPropertyCube"][0];
-            lidar.type = children[i]["data"]["type"][0];
+            //lidar.type = children[i]["data"]["type"][0];
 
-            std::cout << lidar.type <<" "<< lidar.trackid<<std::endl;
+            std::cout << "empty json "<< lidar.trackid<<std::endl;
 
             perception_.insert({lidar.trackid, lidar});
         }
+        else{
+          for(int i = 0; i < children.size(); i++){
+              Lidar lidar;
+              lidar.height = children[i]["height"];
+              lidar.width = children[i]["width"];
+              lidar.length = children[i]["length"];
+              lidar.x = children[i]["x"];
+              lidar.y = children[i]["y"];
+              lidar.z = children[i]["z"];
+              lidar.pitch = children[i]["pitch"];
+              lidar.roll = children[i]["roll"];
+              lidar.yaw = children[i]["yaw"];
+              lidar.tag = children[i]["tag"];
+              lidar.trackid = children[i]["uuid"];
+              lidar.score = children[i]["score"];
+
+              //lidar.isKeyCube = children[i]["data"]["isKeyCube"][0];
+              //lidar.isKeyPropertyCube = children[i]["data"]["isKeyPropertyCube"][0];
+              lidar.type = children[i]["data"]["type"][0];
+
+              std::cout << lidar.type <<" "<< lidar.trackid<<std::endl;
+
+              perception_.insert({lidar.trackid, lidar});
+          }
+        }
+        
+
         
     }
     std::unordered_map<long int, Lidar> perception_;
