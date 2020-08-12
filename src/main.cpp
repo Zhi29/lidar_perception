@@ -36,7 +36,7 @@ void search_directories(std::string curr_directory, std::string extension, std::
 			if (fname != "." && fname != "..")
 			{
                 if(fname.find(extension, (fname.length() - extension.length())) != std::string::npos)
-                    directories.push_back(fname);
+                    sub_directories.push_back(fname);
             }
 		}
 		entry = readdir(dir_point);
