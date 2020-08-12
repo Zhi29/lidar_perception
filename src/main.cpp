@@ -218,11 +218,12 @@ int main(int argc, char *argv[])
                     default: 
                         break;
                 }
+                std::set<SensorTimes, LESS_T0>::iterator iter_data_tbp;
+                for(iter_data_tbp = data_to_be_processed.begin(); iter_data_tbp != data_to_be_processed.end(); iter_data_tbp++)
+                    std::cout << std::fixed << iter_data_tbp->time << std::endl;
             }
 
-            std::set<SensorTimes, LESS_T0>::iterator iter_data_tbp;
-            for(iter_data_tbp = data_to_be_processed.begin(); iter_data_tbp != data_to_be_processed.end(); iter_data_tbp++)
-                std::cout << std::fixed << iter_data_tbp->time << std::endl;
+
             interpolation.interpolateCameras(data_to_be_processed, perceptions);
             data_to_be_processed.erase(data_to_be_processed.begin(), --data_to_be_processed.end());
             //std::cout << "data tbp size: " << data_to_be_processed.size() << std::endl;
