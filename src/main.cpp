@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
         }
 
     //读取ego motion 结果
+    /**
         std::vector<std::string> egomotion_files;
         std::unordered_map<double, EgoMotionReader> egoMotions;
         search(project_path + dir + "/navi_fusion/", "json", egomotion_files);
@@ -98,6 +99,7 @@ int main(int argc, char *argv[])
             std::cout << ego_reader.timestamp << std::endl;
             std::cout << egomotion_files[i] << std::endl;
         }
+        **/
 
     //读取FISH_EYE_F的时间戳
         std::vector<std::string> fish_eye_f_files;
@@ -109,8 +111,8 @@ int main(int argc, char *argv[])
         }
         fish_eye_f_files.clear();
 
-        //std::set<SensorTimes, LESS_T0>::iterator iter;
-        //for(iter = fish_eye_f_.begin(); iter != fish_eye_f_.end(); iter++) std::cout << iter->time << std::endl;
+        std::set<SensorTimes, LESS_T0>::iterator iter;
+        for(iter = fish_eye_f_.begin(); iter != fish_eye_f_.end(); iter++) std::cout << iter->time << std::endl;
 
     //读取FISH_EYE_B的时间戳
         std::vector<std::string> fish_eye_b_files;
