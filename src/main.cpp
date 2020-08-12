@@ -33,6 +33,7 @@ void search_directories(std::string curr_directory, std::string extension, std::
 	while (entry){									// if !entry then end of directory
 		if (entry->d_type == DT_DIR){				// if entry is a directory
 			std::string fname = entry->d_name;
+            std::cout << fname << std::endl;
 			if (fname != "." && fname != "..")
 			{
                 if(fname.find(extension, (fname.length() - extension.length())) != std::string::npos)
