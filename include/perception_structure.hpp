@@ -6,14 +6,6 @@
 #include <Eigen/Dense>
 #include <Eigen/Eigen>
 
-enum class SensorType : int {
-    FISH_EYE_F = 1,
-    FISH_EYE_B = 2,
-    FISH_EYE_L = 3,
-    FISH_EYE_R = 4,
-    LIDAR = 5
-};
-
 struct Lidar{
     double height, length, width;
     double roll, pitch, yaw;
@@ -24,13 +16,17 @@ struct Lidar{
     bool isKeyCube;
     bool isKeyPropertyCube;
     std::string type;
-    //SensorType sensortype;
 
-    //Lidar(SensorType sensortype) : sensortype(sensortype){}
     Lidar lidar(){}
 };
 
-
+enum class SensorType : int {
+    FISH_EYE_F = 1,
+    FISH_EYE_B = 2,
+    FISH_EYE_L = 3,
+    FISH_EYE_R = 4,
+    LIDAR = 5
+};
 
 struct SensorTimes{
     double time;

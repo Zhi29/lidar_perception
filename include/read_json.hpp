@@ -23,8 +23,8 @@ inline nlohmann::json ReadFileToJson(const std::string &file_path) {
 template <typename Derived>
 inline void JsonArrayToEigenMatrix(const nlohmann::json &json_array,
                                    Eigen::MatrixBase<Derived> *eigen_matrix_ptr) {
-  CHECK(static_cast<int>(json_array.size()) == eigen_matrix_ptr->size())
-    << json_array.size() << " " << eigen_matrix_ptr->size();
+  //CHECK(static_cast<int>(json_array.size()) == eigen_matrix_ptr->size())
+  //  << json_array.size() << " " << eigen_matrix_ptr->size();
   // TODO: change to more effective implementation
   size_t rows = eigen_matrix_ptr->rows();
   size_t cols = eigen_matrix_ptr->cols();
@@ -38,75 +38,85 @@ inline void JsonArrayToEigenMatrix(const nlohmann::json &json_array,
 
 } // namespace tools
 
-struct LidarPerception {
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+struct CameraParameters {
+  CameraParameters(std::string const &cam_para_path, SensorType camera_type)
+    : cam_para_path(cam_para_path), camera_type(camera_type) {
+      std::cout << cam_para_path << std::endl;
+    nlohmann::json j = tools::ReadFileToJson(cam_para_path);
+    cam_to_front = j["cam_to_front"];
+    cam_to_left = j["cam_to_left"];
+    cam_to_right = j["cam_to_right"];
+    cam_to_back = j["cam_to_back"];
+    camera_height = j["camera_height"]; 
 
-    LidarPerception(std::string const &perception_path)
-        : LidarPerception(tools::ReadFileToJson(perception_path)) {}
-    LidarPerception(nlohmann::json const &j){
-        nlohmann::json children = j["children"];
-        //std::cout << "Is children empty? " << children.empty() << std::endl;
-        if(children.empty()){
+    translation = {-cam_to_front, (cam_to_right-cam_to_left)/2, camera_height};
+    tools::JsonArrayToEigenMatrix(j["camera_matrix"], &camera_intrinsics);
+    tools::JsonArrayToEigenMatrix(j["rotation_matrix"], &rotation_matrix);
+    distortions.resize(4,1);
+    tools::JsonArrayToEigenMatrix(j["distortion_coefficients"], &distortions);
+  }
+
+  std::string cam_para_path;
+  double cam_to_back, cam_to_front, cam_to_left, cam_to_right, camera_height;
+  Eigen::Matrix3d rotation_matrix, camera_intrinsics;
+  Eigen::Vector3d translation;
+  Eigen::MatrixXd distortions;
+  SensorType camera_type;
+};
+
+struct LidarPerception {
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+  LidarPerception(std::string const &perception_path)
+      : LidarPerception(tools::ReadFileToJson(perception_path)) {}
+
+  LidarPerception(nlohmann::json const &j){
+      nlohmann::json children = j["children"];
+      //std::cout << "Is children empty? " << children.empty() << std::endl;
+      if(children.empty()){
+          Lidar lidar;
+          lidar.height = -1;
+          lidar.width = -1;
+          lidar.length = -1;
+          lidar.x = -1;
+          lidar.y = -1;
+          lidar.z = -1;
+          lidar.pitch = -1;
+          lidar.roll = -1;
+          lidar.yaw = -1;            
+          lidar.trackid = -1;
+          perception_.insert({lidar.trackid, lidar});
+      }
+      else{
+        for(int i = 0; i < children.size(); i++){
             Lidar lidar;
-            lidar.height = -1;
-            lidar.width = -1;
-            lidar.length = -1;
-            lidar.x = -1;
-            lidar.y = -1;
-            lidar.z = -1;
-            lidar.pitch = -1;
-            lidar.roll = -1;
-            lidar.yaw = -1;            
-            lidar.trackid = -1;
+            lidar.height = children[i]["height"];
+            lidar.width = children[i]["width"];
+            lidar.length = children[i]["length"];
+            lidar.x = children[i]["x"];
+            lidar.y = children[i]["y"];
+            lidar.z = children[i]["z"];
+            lidar.pitch = children[i]["pitch"];
+            lidar.roll = children[i]["roll"];
+            lidar.yaw = children[i]["yaw"];
+            lidar.tag = children[i]["tag"];
+            lidar.trackid = children[i]["uuid"];
+            lidar.score = children[i]["score"];
 
             //lidar.isKeyCube = children[i]["data"]["isKeyCube"][0];
             //lidar.isKeyPropertyCube = children[i]["data"]["isKeyPropertyCube"][0];
-            //lidar.type = children[i]["data"]["type"][0];
+            lidar.type = children[i]["data"]["type"][0];
 
-            std::cout << "empty json "<< lidar.trackid<<std::endl;
+            //std::cout << lidar.type <<" "<< lidar.trackid << std::endl;
 
             perception_.insert({lidar.trackid, lidar});
         }
-        else{
-          for(int i = 0; i < children.size(); i++){
-              Lidar lidar;
-              lidar.height = children[i]["height"];
-              lidar.width = children[i]["width"];
-              lidar.length = children[i]["length"];
-              lidar.x = children[i]["x"];
-              lidar.y = children[i]["y"];
-              lidar.z = children[i]["z"];
-              lidar.pitch = children[i]["pitch"];
-              lidar.roll = children[i]["roll"];
-              lidar.yaw = children[i]["yaw"];
-              lidar.tag = children[i]["tag"];
-              lidar.trackid = children[i]["uuid"];
-              lidar.score = children[i]["score"];
-
-              //lidar.isKeyCube = children[i]["data"]["isKeyCube"][0];
-              //lidar.isKeyPropertyCube = children[i]["data"]["isKeyPropertyCube"][0];
-              lidar.type = children[i]["data"]["type"][0];
-
-              std::cout << lidar.type <<" "<< lidar.trackid<<std::endl;
-
-              perception_.insert({lidar.trackid, lidar});
-          }
-        }
-        
-
-        
-    }
-    std::unordered_map<long int, Lidar> perception_;
-    bool isKeyCube;
-    bool isKeyPropertyCube;
-    std::string type;
-    double height, length, width;
-    double pitch, roll, yaw;
-    double x, y, z;
-    std::string tag;
-    long int uuid;
-    double score;
+      }
+  }
+  std::unordered_map<long int, Lidar> perception_;
+  double timestamp = 0;
 };
+
 
 struct EgoMotionReader{
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
